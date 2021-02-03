@@ -1856,6 +1856,8 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen) {
     {EM_RISCV,       EM_RISCV,   LP64_ONLY(ELFCLASS64) NOT_LP64(ELFCLASS32),ELFDATA2LSB, (char*)"RISCV"},
   };
 
+#define riscv
+
 #if  (defined IA32)
   static  Elf32_Half running_arch_code=EM_386;
 #elif   (defined AMD64)
@@ -1888,11 +1890,11 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen) {
   static  Elf32_Half running_arch_code=EM_68K;
 #elif  (defined SH)
   static  Elf32_Half running_arch_code=EM_SH;
-#elif  (defined RISCV)
+#elif  (defined riscv)
   static  Elf32_Half running_arch_code=EM_RISCV;
 #else
     #error Method os::dll_load requires that one of following is defined:\
-        AARCH64, ALPHA, ARM, AMD64, IA32, IA64, M68K, MIPS, MIPSEL, PARISC, __powerpc__, __powerpc64__, RISCV, S390, SH, __sparc
+        AARCH64, ALPHA, ARM, AMD64, IA32, IA64, M68K, MIPS, MIPSEL, PARISC, __powerpc__, __powerpc64__, S390, SH, __sparc
 #endif
 
   // Identify compatability class for VM's architecture and library's architecture
@@ -2536,6 +2538,8 @@ void os::get_summary_cpu_info(char* cpuinfo, size_t length) {
   strncpy(cpuinfo, "IA64", length);
 #elif defined(PPC)
   strncpy(cpuinfo, "PPC64", length);
+#elif defined(RISCV)
+  strncpy(cpuinfo, "RISCV", length);
 #elif defined(S390)
   strncpy(cpuinfo, "S390", length);
 #elif defined(SPARC)
