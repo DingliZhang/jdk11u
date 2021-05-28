@@ -414,7 +414,7 @@ void TemplateTable::fast_aldc(bool wide)
 
     // Stash null_sentinel address to get its value later
     int32_t offset = 0;
-    __ auipc(rarg, (int32_t)Universe::the_null_sentinel_addr());
+    __ lui(rarg, (int32_t)Universe::the_null_sentinel_addr() + 0x800);
     offset = ((int32_t)Universe::the_null_sentinel_addr() << 20) >> 20;
     __ lw(tmp, Address(rarg, offset));
     __ bne(result, tmp, notNull);

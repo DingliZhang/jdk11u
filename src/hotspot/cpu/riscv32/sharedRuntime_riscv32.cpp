@@ -194,12 +194,12 @@ bool SharedRuntime::is_wide_vector(int size) {
 }
 
 size_t SharedRuntime::trampoline_size() {
-  return 2 * NativeInstruction::instruction_size; // auipc + jalr
+  return 2 * NativeInstruction::instruction_size; // lui + jalr
 }
 
 void SharedRuntime::generate_trampoline(MacroAssembler *masm, address destination) {
   assert_cond(masm != NULL);
-  __ auipc(t0, (int32_t)destination);
+  __ lui(t0, (int32_t)destination + 0x800);
   __ jalr(x0, t0, ((int32_t)destination << 20) >> 20);
 }
 

@@ -93,10 +93,10 @@ class NativeInstruction {
   }
 
   // the instruction sequence of movptr is as below:
-  //     auipc
+  //     luipc
   //     addi
   static bool check_movptr_data_dependency(address instr) {
-    return compare_instr_field(instr, 11, 7, instr + 4, 19, 15);          // check the rd field of auipc and the rs1 field of addi
+    return compare_instr_field(instr, 11, 7, instr + 4, 19, 15);          // check the rd field of lui and the rs1 field of addi
   }
 
   // the instruction sequence of li is as below:
@@ -277,7 +277,7 @@ inline NativeCall* nativeCall_before(address return_address) {
 class NativeMovConstReg: public NativeInstruction {
  public:
   enum RISCV32_specific_constants {
-    movptr_instruction_size             =    2 * NativeInstruction::instruction_size, // auipc, addi
+    movptr_instruction_size             =    2 * NativeInstruction::instruction_size, // lui, addi
     load_pc_relative_instruction_size   =    2 * NativeInstruction::instruction_size, // auipc, ld
     instruction_offset                  =    0,
     displacement_offset                 =    0

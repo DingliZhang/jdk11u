@@ -560,7 +560,7 @@ void MacroAssembler::emit_static_call_stub() {
   mov_metadata(xmethod, (Metadata*)NULL);
 
   // Jump to the entry point of the i2c stub.
-  auipc(t0, 0);
+  lui(t0, 0);
   jalr(x0, t0, 0);
 }
 void MacroAssembler::call_VM_leaf_base(address entry_point,
@@ -579,7 +579,7 @@ void MacroAssembler::call_native_base(address entry_point, Label *retaddr) {
   Label E, L;
   int32_t offset = 0;
   push_reg(0x80000040, sp);   // push << t0 & xmethod >> to sp
-  auipc(t0, (int32_t)entry_point);
+  lui(t0, (int32_t)entry_point + 0x800);
   jalr(x1, t0, ((int32_t)entry_point<<20)>>20);
   if (retaddr != NULL) {
     bind(*retaddr);
@@ -2909,7 +2909,7 @@ void MacroAssembler::la_patchable(Register reg1, const Address &dest, int32_t &o
   code_section()->relocate(inst_mark(), dest.rspec());
 
   int32_t distance = dest.target() - pc();
-  auipc(reg1, (int32_t)distance);
+  auipc(reg1, (int32_t)distance + 0x800);
   offset = ((int32_t)distance << 20) >> 20;
 }
 

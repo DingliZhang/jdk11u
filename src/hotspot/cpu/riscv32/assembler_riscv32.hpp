@@ -486,10 +486,8 @@ public:
   void NAME(FloatRegister Rd, address dest, Register temp = t0) {                                  \
     assert_cond(dest != NULL);                                                                     \
     int32_t distance = (dest - pc());                                                              \
-    if (is_offset_in_range(distance, 32)) {                                                        \
-      auipc(temp, (int32_t)distance);                                                              \
-      NAME(Rd, temp, ((int32_t)distance << 20) >> 20);                                             \
-    }                                                                                              \
+    auipc(temp, distance + 0x800);                                                                 \
+    NAME(Rd, temp, ((int32_t)distance << 20) >> 20);                                               \
   }                                                                                                \
   INSN_ENTRY_RELOC(void, NAME(FloatRegister Rd, address dest, relocInfo::relocType rtype, Register temp = t0)) \
     NAME(Rd, dest, temp);                                                                          \
@@ -604,10 +602,8 @@ public:
     assert_cond(dest != NULL);                                                                     \
     assert_different_registers(Rs, temp);                                                          \
     int32_t distance = (dest - pc());                                                              \
-    if (is_offset_in_range(distance, 32)) {                                                        \
-      auipc(temp, (int32_t)distance);                                                              \
-      NAME(Rs, temp, ((int32_t)distance << 20) >> 20);                                             \
-    }                                                                                              \
+    auipc(temp, (int32_t)distance + 0x800);                                                        \
+    NAME(Rs, temp, ((int32_t)distance << 20) >> 20);                                               \
   }                                                                                                \
   void NAME(Register Rs, const Address &adr, Register temp = t0) {                                 \
     switch(adr.getMode()) {                                                                        \
@@ -642,11 +638,9 @@ public:
 #define INSN(NAME)                                                                                 \
   void NAME(FloatRegister Rs, address dest, Register temp = t0) {                                  \
     assert_cond(dest != NULL);                                                                     \
-    int64_t distance = (dest - pc());                                                              \
-    if (is_offset_in_range(distance, 32)) {                                                        \
-      auipc(temp, (int32_t)distance);                                                              \
-      NAME(Rs, temp, ((int32_t)distance << 20) >> 20);                                             \
-    }                                                                                              \
+    int32_t distance = (dest - pc());                                                              \
+    auipc(temp, (int32_t)distance + 0x800);                                                        \
+    NAME(Rs, temp, ((int32_t)distance << 20) >> 20);                                               \
   }                                                                                                \
   void NAME(FloatRegister Rs, const Address &adr, Register temp = t0) {                            \
     switch(adr.getMode()) {                                                                        \
@@ -733,7 +727,7 @@ public:
     } else {                                                                                  \
       assert_different_registers(Rd, temp);                                                   \
       int32_t off = 0;                                                                        \
-      auipc(temp, (int32_t)dest);                                                             \
+      lui(temp, (int32_t)dest + 0x800);                                                       \
       jalr(Rd, temp, ((int32_t)dest<<20)>>20);                                                \
     }                                                                                         \
   }                                                                                           \

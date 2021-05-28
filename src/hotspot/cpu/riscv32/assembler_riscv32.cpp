@@ -598,7 +598,7 @@ void Assembler::li(Register Rd, int32_t imm) {
       jal(REGISTER, distance);                                     \
     } else {                                                       \
       assert(temp != noreg, "temp must not be empty register!");   \
-      auipc(temp, (int32_t)dest + 0x800);                                  \
+      lui(temp, (int32_t)dest + 0x800);                            \
       jalr(REGISTER, temp, ((int32_t)dest << 20) >> 20);           \
     }                                                              \
   }                                                                \
@@ -708,7 +708,7 @@ void Assembler::movptr(Register Rd, uintptr_t imm32) {
 
 void Assembler::movptr(Register Rd, address addr) {
   int offset = 0;
-  auipc(Rd, (int32_t)addr + 0x800);
+  lui(Rd, (int32_t)addr + 0x800);
   addi(Rd, Rd, ((int32_t)addr << 20) >> 20);
 }
 
